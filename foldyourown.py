@@ -30,7 +30,12 @@ def init():
     slider_scale = Slider(axScale, 'Scale', 0.0, 50.0, 1.0)
     slider_scale.on_changed(update)    
 
+    plt.xticks([])
+    plt.yticks([])        
     axgraph = plt.axes([0.15, 0.25, 0.7, 0.7])
+
+    axgraph.spines['right'].set_color('none')
+    axgraph.spines['top'].set_color('none')
 
     return density_k, psi    
             
@@ -83,12 +88,10 @@ def plotvertices(psi):
     
     #plot the vertices
     M.scatter(pos[:,:,0].flat,pos[:,:,1].flat,s=1,lw=0)
-
 def update(val):
     global psi
     global scale
     global slider_scale
     scale = slider_scale.val
-    #M.clear()
+    M.cla()
     plotvertices(psi)
-    plt.draw()
