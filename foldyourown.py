@@ -2,7 +2,7 @@ import numpy as N, pylab as M
 
 def init():
     """ Set up the initial conditions """
-    density=N.loadtxt('/Users/neyrinck/plog/densmesh.txt')
+    density=N.loadtxt('densmesh.txt')
     # Real Fourier transform of "density" 
     density_k = N.fft.rfftn(density*1e3) # 1e3 to enhance contrast
 
