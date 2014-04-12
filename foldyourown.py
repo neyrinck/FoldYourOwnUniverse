@@ -1,8 +1,11 @@
+import sys,os
+sys.path.append(os.path.realpath('..'))
+
 import numpy as N, pylab as M
 
 def init():
     """ Set up the initial conditions """
-    density=N.loadtxt('/Users/neyrinck/plog/densmesh.txt')
+    density=N.loadtxt(os.path.join(sys.path[0], './densmesh.txt'))
     # Real Fourier transform of "density" 
     density_k = N.fft.rfftn(density*1e3) # 1e3 to enhance contrast
 
