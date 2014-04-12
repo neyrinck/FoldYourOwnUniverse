@@ -1,5 +1,0 @@
-import foldyourown
-import sys
-
-dk, psi = foldyourown.init()
-foldyourown.plotvertices(psi,scale=sys.argv[1])
