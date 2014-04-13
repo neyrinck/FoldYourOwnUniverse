@@ -19,9 +19,15 @@ def init():
     # Sets up initial dimensions
     M.figure(figsize=(8,8))
     
-    density=N.loadtxt(os.path.join(sys.path[0], './densmesh.txt'))
-    # Real Fourier transform of "density" 
-    density_k = N.fft.rfftn(density*3e3) # 1e3 to enhance contrast
+    if (len(sys.argv) > 1):
+        density = N.loadtxt(os.path.join(sys.path[0], sys.argv[1]))        
+        # Use a smaller scale for alterate files so the initial image is easier to see 
+        density_k = N.fft.rfftn(density*1e2)  
+        
+    else:
+        density=N.loadtxt(os.path.join(sys.path[0], './densmesh.txt'))
+        # Real Fourier transform of "density" 
+        density_k = N.fft.rfftn(density*3e3) # 3e3 to enhance contrast    
 
     global psi
     psi = zeldovich(density_k)
@@ -37,6 +43,7 @@ def init():
 
     axcolor = 'lightgoldenrodyellow'
     axScale = plt.axes([0.15, 0.1, 0.7, 0.03], axisbg=axcolor)
+    
     slider_scale = Slider(axScale, 'Scale', 0.0, 20.0, 1.0)
     slider_scale.on_changed(sliderUpdate)    
 
