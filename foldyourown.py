@@ -2,18 +2,45 @@ import sys,os
 sys.path.append(os.path.realpath('..'))
 
 import numpy as N, pylab as M
+import matplotlib.pyplot as plt
+from matplotlib.widgets import Slider
+
+# These variables are global, so they're defined up here first
+scale = 1.0
+slider_scale = 1.0
+psi = 1.0
 
 def init():
     """ Set up the initial conditions """
+    # Sets up initial dimensions
+    M.figure(figsize=(8,8))
+    
     density=N.loadtxt(os.path.join(sys.path[0], './densmesh.txt'))
     # Real Fourier transform of "density" 
     density_k = N.fft.rfftn(density*1e3) # 1e3 to enhance contrast
 
+    global psi
     psi = zeldovich(density_k)
     # Zel'dovich displacement field
 
-    return density_k, psi
+    global scale
+    global slider_scale
+    
+    scale = 1.0
+    slider_scale = 50.0
 
+    axcolor = 'lightgoldenrodyellow'
+    axScale = plt.axes([0.15, 0.1, 0.7, 0.03], axisbg=axcolor)
+    slider_scale = Slider(axScale, 'Scale', 0.0, 50.0, 1.0)
+    slider_scale.on_changed(update)    
+
+    # Attempting to removed axes from the graph
+    plt.axes([0.15, 0.15, 0.7, 0.7])
+    plt.xticks([])
+    plt.yticks([])        
+
+    return density_k, psi    
+            
 def getkgrid(ng=64):
     """ ng = number of particles in each dim """
 
@@ -58,9 +85,25 @@ def psi2pos(psi,boxsize=500.):
     pos[:,:,1] += N.transpose(x)
     return pos
 
-def plotvertices(psi,scale=1.):
-    pos = psi2pos(psi*scale,boxsize=500.)
+def plotvertices(psi):
+    boxsize = 500.
+    pos = psi2pos(psi*scale,boxsize)
+    
+    plt.axes([0.15, 0.15, 0.7, 0.7])
+    plt.xticks([])
+    plt.yticks([])           
+    
+    plt.xlim((boxsize * -0.2), (boxsize * 1.2))
+    plt.ylim((boxsize * -0.2), (boxsize * 1.2))
     
     #plot the vertices
     M.scatter(pos[:,:,0].flat,pos[:,:,1].flat,s=1,lw=0)
-
+    
+# When the slider is changed, redraw the screen with the updated scale
+def update(val):
+    global psi
+    global scale
+    global slider_scale
+    scale = slider_scale.val
+    M.cla()
+    plotvertices(psi)
