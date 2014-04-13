@@ -6,7 +6,7 @@ from PIL import Image
 im = Image.open('NASA_logo.jpg')
 #im.show()
 #im.convert('LA').show()
-im.convert('LA').resize((64,64),Image.ANTIALIAS).show()
+#im.convert('LA').resize((64,64),Image.ANTIALIAS).show()
 data = im.convert('LA').resize((64,64),Image.ANTIALIAS)
 
 #scale values from 0 to 1
