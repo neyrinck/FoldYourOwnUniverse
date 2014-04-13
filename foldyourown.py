@@ -5,6 +5,7 @@ import numpy as N, pylab as M
 import matplotlib.pyplot as plt
 from matplotlib.widgets import Slider
 
+# These variables are global, so they're defined up here first
 scale = 1.0
 slider_scale = 1.0
 psi = 1.0
@@ -26,16 +27,14 @@ def init():
     slider_scale = 50.0
 
     axcolor = 'lightgoldenrodyellow'
-    axScale = plt.axes([0.25, 0.1, 0.65, 0.03], axisbg=axcolor)
+    axScale = plt.axes([0.15, 0.1, 0.7, 0.03], axisbg=axcolor)
     slider_scale = Slider(axScale, 'Scale', 0.0, 50.0, 1.0)
     slider_scale.on_changed(update)    
 
+    # Attempting to removed axes from the graph
+    plt.axes([0.15, 0.25, 0.7, 0.7])
     plt.xticks([])
     plt.yticks([])        
-    axgraph = plt.axes([0.15, 0.25, 0.7, 0.7])
-
-    axgraph.spines['right'].set_color('none')
-    axgraph.spines['top'].set_color('none')
 
     return density_k, psi    
             
@@ -86,8 +85,14 @@ def psi2pos(psi,boxsize=500.):
 def plotvertices(psi):
     pos = psi2pos(psi*scale,boxsize=500.)
     
+    plt.axes([0.15, 0.25, 0.7, 0.7])
+    plt.xticks([])
+    plt.yticks([])           
+    
     #plot the vertices
     M.scatter(pos[:,:,0].flat,pos[:,:,1].flat,s=1,lw=0)
+    
+# When the slider is changed, redraw the screen with the updated scale
 def update(val):
     global psi
     global scale
