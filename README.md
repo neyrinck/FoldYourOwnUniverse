@@ -8,4 +8,4 @@ Usage:
 
 python run.py
 
-python run.py densmesh2.tx
+python run.py densmesh2.txt
