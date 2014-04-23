@@ -6,6 +6,6 @@ https://2014.spaceappschallenge.org/project/fold-your-own-universe/
 
 Usage:
 
-python run.py
+python foldyourown.py
 
-python run.py densmesh2.txt
+python foldyourown.py densmesh2.txt
