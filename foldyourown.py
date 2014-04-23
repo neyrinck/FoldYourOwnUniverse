@@ -1,9 +1,15 @@
 import sys,os
 sys.path.append(os.path.realpath('..'))
 
-import numpy as N, pylab as M, matplotlib.axes as MA
-#import matplotlib.pyplot as M
+import numpy as N, pylab as M
+import matplotlib.image as MI
 from matplotlib.widgets import Slider, RadioButtons
+
+def convertimage(filename):
+    """ uses native matplotlib functionality. only works for PNG's """
+    img = MI.imread(filename)
+    # grayscale it, then return the 2D array
+    return N.transpose(N.mean(img[:,:,:3],axis=2))[:,::-1]
 
 def getkgrid(ng=64):
     """ ng = number of particles in each dim """
@@ -70,7 +76,7 @@ def plotvertices(psi,scale,init=False):
     if radio_mode == "Points":
         ax.scatter(pos[:,:,0].flat,pos[:,:,1].flat,s=1,lw=0)
     elif radio_mode == "Mesh":
-        ax.pcolorfast(pos[:,:,0],pos[:,:,1],c,alpha=0.1,vmin=0.,vmax=1.,l=0.5)
+        ax.pcolorfast(pos[:,:,0],pos[:,:,1],c,alpha=0.1,vmin=0.,vmax=1.)
         #M.pcolor(pos[:,:,0],pos[:,:,1],c,alpha=0.3,vmin=0.,vmax=1.)
 
 # When the slider is changed, redraw the screen with the updated scale
@@ -105,7 +111,9 @@ psi = 1.0
 M.figure(figsize=(8,8))
     
 if (len(sys.argv) > 1):
-    density = N.loadtxt(os.path.join(sys.path[0], sys.argv[1]))        
+    #density = N.loadtxt(os.path.join(sys.path[0], sys.argv[1]))        
+    density = convertimage(os.path.join(sys.path[0], sys.argv[1]))
+
         
 else:
     density=N.loadtxt(os.path.join(sys.path[0], './densmesh.txt'))
