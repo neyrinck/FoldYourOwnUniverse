@@ -8,4 +8,4 @@ Usage:
 
 python foldyourown.py
 
-python foldyourown.py NASA_logo.png
+python foldyourown.py densmesh2.txt
