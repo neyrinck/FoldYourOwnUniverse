@@ -8,19 +8,8 @@ https://2014.spaceappschallenge.org/project/fold-your-own-universe/
 #initial data is as in cosmology
 python foldyourown.py
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-python foldyourown.py NASA_logo.png
-=======
-=======
->>>>>>> FETCH_HEAD
-#initial data from 'NASA_logo.jpg'
+# initial data is the NASA logo
 python foldyourown.py NASA_logo.png
 
-#initial data from 'Stars.jpg'
+# initial data consists of (movie) stars
 python foldyourown.py Stars.png
-
-<<<<<<< HEAD
->>>>>>> FETCH_HEAD
-=======
->>>>>>> FETCH_HEAD
