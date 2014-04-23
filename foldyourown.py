@@ -11,16 +11,14 @@ def convertimage(filename):
     # grayscale it, then return the 2D array
     return N.transpose(N.mean(img[:,:,:3],axis=2))[:,::-1]
 
-def getkgrid(ng=64):
-    """ ng = number of particles in each dim """
+def getkgrid(sk):
+    """ sk = shape of k-space array """
 
-    thirdim=ng/2+1
-    sk = (ng,thirdim)
-
+    ny = (sk[1]-1)*2
     kx = N.fromfunction(lambda x,y:x, sk).astype(N.float32)
-    kx[N.where(kx > ng/2)] -= ng
+    kx[N.where(kx > sk[0]/2)] -= sk[0]
     ky = N.fromfunction(lambda x,y:y, sk).astype(N.float32)
-    ky[N.where(ky > ng/2)] -= ng
+    ky[N.where(ky > ny)] -= ny
 
     k2 = kx**2+ky**2
     k2[0,0] = 1.
@@ -30,47 +28,55 @@ def zeldovich(dk,boxsize=None):
     """ implements the Zel'dovich approximation to move particles """
 
     sk = dk.shape #shape of the Fourier-space density field
+    print sk
     ng = sk[0] #number of particles in each dimension
 
-    kx, ky = getkgrid(ng)
+    kx, ky = getkgrid(sk)
 
     # psi = displacement of each particle from initial conditions.
-    psi = N.empty((ng,ng,2),dtype=N.float32)
+    nx = sk[0]
+    ny = 2*(sk[1]-1)
+    psi = N.empty((nx,ny,2),dtype=N.float32)
     psi[:,:,0] = N.fft.irfftn(-1j*dk*kx)
     psi[:,:,1] = N.fft.irfftn(-1j*dk*ky)
     return psi
 
-def psi2pos(psi,boxsize=500.):
+def psi2pos(psi,boxsize=None):
     """ 
     displacement field to positions 
     (adding displacement to a regular lattice)
     """
     ng = psi.shape[0] # number of particles in each dimension
 
-    x=boxsize/ng*N.fromfunction(lambda x,y:x, (ng,ng)) 
+    if boxsize == None:
+        boxsize = N.max(psi.shape[:2])
+
+    x=boxsize/float(psi.shape[0])*N.fromfunction(lambda x,y:x, (psi.shape[0],psi.shape[1])) 
     # x positions on a regular lattice
+    y=boxsize/float(psi.shape[1])*N.fromfunction(lambda x,y:y, (psi.shape[0],psi.shape[1]))
 
     pos = 1.*psi
     pos[:,:,0] += x
-    pos[:,:,1] += N.transpose(x)
+    pos[:,:,1] += y
     return pos
 
 def plotvertices(psi,scale,init=False):
     global radio_mode
     
     M.cla()
-    boxsize = 500.
-    pos = psi2pos(psi*scale,boxsize)
+    pos = psi2pos(psi*scale)
     
     ax = M.axes([0.15, 0.15, 0.7, 0.7])
     M.xticks([])
     M.yticks([])           
     
-    M.xlim((boxsize * -0.2), (boxsize * 1.2))
-    M.ylim((boxsize * -0.2), (boxsize * 1.2))
+    boxsize = N.max(pos.shape[:2])
+    M.axis(boxsize*N.array([-0.2,1.2,-0.2,1.2]))
+    #M.xlim((pos.shape[1] * -0.2), (pos.shape[0] * 1.2))
+    #M.ylim((pos.shape[] * -0.2), (pos.shape[1] * 1.2))
     
     #N.savetxt('test.pos',pos.reshape(64**2,2),fmt='%f')
-    c = N.zeros((pos.shape[0]-1,pos.shape[0]-1),dtype=N.float32)
+    c = N.zeros((pos.shape[0]-1,pos.shape[1]-1),dtype=N.float32)
 
     #plot the vertices
     if radio_mode == "Points":
@@ -120,7 +126,7 @@ else:
 
 density -= N.min(density)
 density = density/N.mean(density) - 1.
-density *= density.shape[0]/N.std(density)
+density *= 15./N.std(density)
 
 # Real Fourier transform of "density" 
 density_k = N.fft.rfftn(density)  
@@ -133,7 +139,7 @@ slider_scale = 20.0
 axcolor = 'lightgoldenrodyellow'
 axScale = M.axes([0.15, 0.1, 0.7, 0.03], axisbg=axcolor)
     
-slider_scale = Slider(axScale, 'Scale', 0.0, 2.0, 1.0)
+slider_scale = Slider(axScale, 'Scale', 0.0, 3.0, 1.0)
 slider_scale.on_changed(sliderUpdate)    
 
 radio_buttons = RadioButtons(M.axes([0.425, 0.85, 0.15, 0.15]), ("Points", "Mesh"))
