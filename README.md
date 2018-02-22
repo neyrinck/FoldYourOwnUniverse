@@ -1,8 +1,6 @@
 FoldYourOwnUniverse
 ===================
 Python module to set the initial conditions of a 2D universe, and see approximately how that would evolve gravitationally.
-Using realistically random initial conditions:
-![Random initial conditions](Origami-Universe-O.png)
 
 An image such as the Mona Lisa
 
