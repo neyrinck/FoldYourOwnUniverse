@@ -12,22 +12,22 @@ morphs gravitationally to
 
 ![Mona Lisa (folded)](monalisa_folded.png?raw=true "Mona Lisa (Folded)")
 
-#Usage:
+# Usage:
 
-Initial data is as in cosmology:
+Random cosmological initial conditions:
 python foldyourown.py
 
-Initial data is the NASA logo:
+Use NASA logo for initial conditions:
 python foldyourown.py NASA_logo.png
 
-Initial data consists of (movie) stars
-python foldyourown.py Stars.png
+Use Mona Lisa logo for initial conditions:
+python foldyourown.py monalisa.png
 
 Input .png can be arbitrary; to specify approximate resolution, use the optional third argument, e.g.
 
 python foldyourown.py NASA_logo.png 96
 
-#Science:
+# Science:
 
 The radio button 'Zeldovich' refers to the Zeldovich approximation (Zeldovich, 1970), which returns a qualitatively accruate description of the cosmic web.
 
