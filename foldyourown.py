@@ -201,7 +201,7 @@ axcolor = 'lightgoldenrodyellow'
 
 viewaxes = [0.02, 0.05, 0.95, 0.85]
 
-axScale = M.axes([viewaxes[0]+0.05, 0.01, viewaxes[2]-0.1, 0.03], axisbg=axcolor)
+axScale = M.axes([viewaxes[0]+0.05, 0.01, viewaxes[2]-0.1, 0.03])
     
 slider_scale = Slider(axScale, 'Time', 0.0, 8.0, 1.0)
 slider_scale.on_changed(sliderUpdate)
